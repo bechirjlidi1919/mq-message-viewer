@@ -1,0 +1,44 @@
+name: payment-mq-router
+
+services:
+  ibmmq:
+    image: icr.io/ibm-messaging/mq:latest
+    container_name: ibmmq
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      MQ_ADMIN_PASSWORD: password
+      MQ_APP_PASSWORD: password
+    ports:
+      - "1414:1414"   # connexions applicatives
+      - "9443:9443"   # console web
+    volumes:
+      - mq-data:/mnt/mqm
+      - ./docker/mq/20-payment.mqsc:/etc/mqm/20-payment.mqsc:ro
+    healthcheck:
+      test: ["CMD", "chkmqhealthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  oracle:
+    image: gvenzl/oracle-free:23-slim-faststart
+    container_name: oracle
+    environment:
+      ORACLE_PASSWORD: oracle
+      APP_USER: paymentTest
+      APP_USER_PASSWORD: paymentTest
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  mq-data:
+  oracle-data:

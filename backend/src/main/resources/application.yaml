@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: payment-mq-router
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
+    username: paymentTest
+    password: paymentTest
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  threads:
+    virtual:
+      enabled: true
+
+ibm:
+  mq:
+    queue-manager: QM1
+    channel: DEV.APP.SVRCONN
+    conn-name: localhost(1414)
+    user: app
+    password: password
+
+app:
+  mq:
+    queue: DEV.PAYMENT.IN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8081
