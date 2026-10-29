@@ -10,8 +10,8 @@ services:
       MQ_ADMIN_PASSWORD: password
       MQ_APP_PASSWORD: password
     ports:
-      - "1414:1414"   # connexions applicatives
-      - "9443:9443"   # console web
+      - "1414:1414"
+      - "9443:9443"
     volumes:
       - mq-data:/mnt/mqm
       - ./docker/mq/20-payment.mqsc:/etc/mqm/20-payment.mqsc:ro
@@ -38,6 +38,30 @@ services:
       timeout: 5s
       retries: 30
       start_period: 30s
+
+  backend:
+    build: ./backend
+    container_name: backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle:1521/FREEPDB1
+      IBM_MQ_CONNNAME: ibmmq(1414)
+    ports:
+      - "8081:8081"
+    depends_on:
+      oracle:
+        condition: service_healthy
+      ibmmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   mq-data:
