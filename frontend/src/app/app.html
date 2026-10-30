@@ -1,5 +1,10 @@
 <h1>Messages MQ ({{ total() }})</h1>
 
+<p>
+  <input #q placeholder="Rechercher dans le contenu..." (keyup.enter)="rechercher(q.value)">
+  <button (click)="rechercher(q.value)">Rechercher</button>
+</p>
+
 <table>
   <tr>
     <th>ID</th>
@@ -14,12 +19,14 @@
       <td>{{ m.queueName }}</td>
       <td>{{ m.receivedAt | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
     </tr>
+  } @empty {
+    <tr><td colspan="4">Aucun message</td></tr>
   }
 </table>
 
 <p>
   <button (click)="load(page() - 1)" [disabled]="page() === 0">Précédent</button>
-  Page {{ page() + 1 }} / {{ totalPages() }}
+  Page {{ page() + 1 }} / {{ totalPages() || 1 }}
   <button (click)="load(page() + 1)" [disabled]="page() + 1 >= totalPages()">Suivant</button>
 </p>
 

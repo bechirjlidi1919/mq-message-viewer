@@ -17,13 +17,24 @@ export class App implements OnInit {
   totalPages = signal(0);
   total = signal(0);
   selected = signal<any>(null);
+  search = '';
 
   ngOnInit() {
     this.load(0);
   }
 
+  rechercher(texte: string) {
+    this.search = texte.trim();
+    this.selected.set(null);
+    this.load(0);
+  }
+
   load(page: number) {
-    this.http.get<any>(`/api/messages?page=${page}&size=20`).subscribe(res => {
+    let url = `/api/messages?page=${page}&size=20`;
+    if (this.search) {
+      url += `&search=${encodeURIComponent(this.search)}`;
+    }
+    this.http.get<any>(url).subscribe(res => {
       this.messages.set(res.content);
       this.page.set(res.page);
       this.totalPages.set(res.totalPages);

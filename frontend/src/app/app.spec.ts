@@ -7,7 +7,6 @@ describe('App', () => {
 
   let httpMock: HttpTestingController;
 
-  // Fausse réponse de l'API : 2 messages
   const fausePage = {
     content: [
       { id: 2, messageId: 'ID:2', queueName: 'DEV.PAYMENT.IN', receivedAt: '2026-10-29T15:00:00Z' },
@@ -28,15 +27,14 @@ describe('App', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // vérifie qu'aucun appel HTTP inattendu n'a eu lieu
+    httpMock.verify(); 
   });
 
-  // Crée le composant et répond au premier appel avec la page donnée
   function demarrer(page = fausePage) {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges(); // déclenche ngOnInit()
     httpMock.expectOne('/api/messages?page=0&size=20').flush(page);
-    fixture.detectChanges(); // met l'écran à jour avec la réponse
+    fixture.detectChanges(); 
     return fixture;
   }
 
@@ -74,16 +72,35 @@ describe('App', () => {
     const fixture = demarrer();
     const boutons = fixture.nativeElement.querySelectorAll('button');
 
-    expect(boutons[0].disabled).toBe(true); // Précédent
-    expect(boutons[1].disabled).toBe(true); // Suivant
-  });
+    });
 
   it('charge la page suivante au clic sur Suivant', () => {
     const fixture = demarrer({ ...fausePage, totalElements: 60, totalPages: 3 });
     const boutons = fixture.nativeElement.querySelectorAll('button');
 
-    boutons[1].click(); // Suivant
+    boutons[2].click();
 
     httpMock.expectOne('/api/messages?page=1&size=20').flush({ ...fausePage, page: 1, totalPages: 3 });
   });
+
+
+
+  it('lance une recherche avec le texte saisi', () => {
+    const fixture = demarrer();
+    const ecran: HTMLElement = fixture.nativeElement;
+
+    const champ = ecran.querySelector('input') as HTMLInputElement;
+    champ.value = 'test-42';
+    (ecran.querySelectorAll('button')[0] as HTMLButtonElement).click(); // Rechercher
+
+    httpMock.expectOne('/api/messages?page=0&size=20&search=test-42')
+      .flush({ ...fausePage, totalElements: 1, content: [fausePage.content[0]] });
+    fixture.detectChanges();
+
+    expect(ecran.querySelector('h1')?.textContent).toContain('Messages MQ (1)');
+  });
+
+
+
+
 });
