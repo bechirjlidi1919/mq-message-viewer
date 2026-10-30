@@ -9,9 +9,19 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          fetch_size: 100
   threads:
     virtual:
       enabled: true
+  jms:
+    listener:
+      session:
+        transacted: true
+      min-concurrency: 5
+      max-concurrency: 10
 
 ibm:
   mq:
@@ -24,6 +34,8 @@ ibm:
 app:
   mq:
     queue: DEV.PAYMENT.IN
+    dlq: DEV.PAYMENT.DLQ
+    max-attempts: 3
 
 management:
   endpoints:
@@ -33,5 +45,10 @@ management:
   endpoint:
     health:
       show-details: always
+
 server:
   port: 8081
+
+logging:
+  level:
+    com.bank.payment: DEBUG

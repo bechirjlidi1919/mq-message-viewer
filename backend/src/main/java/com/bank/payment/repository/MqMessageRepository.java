@@ -1,6 +1,8 @@
 package com.bank.payment.repository;
 
+import com.bank.payment.dto.MessageDto;
 import com.bank.payment.entity.MqMessage;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,11 +12,9 @@ public interface MqMessageRepository extends JpaRepository<MqMessage, Long> {
 
     boolean existsByMessageId(String messageId);
 
-    List<MqMessage> findAllByOrderByReceivedAtDesc(Pageable pageable);
+    Page<MessageDto> findAllBy(Pageable pageable);
 
-    List<MqMessage> findByPayloadContainingOrderByReceivedAtDesc(String search, Pageable pageable);
+    Page<MessageDto> findByPayloadContaining(String search, Pageable pageable);
 
-    long countByPayloadContaining(String search);
-
-    List<MqMessage> findAllByOrderByReceivedAtDesc();
+    List<MessageDto> findAllByOrderByReceivedAtDesc();
 }

@@ -7,6 +7,7 @@ import jakarta.jms.TextMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import com.bank.payment.service.impl.MessageIngestionServiceImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,8 +22,7 @@ class MessageIngestionServiceTest {
     @BeforeEach
     void setUp() {
         repository = mock(MqMessageRepository.class);
-        service = new MessageIngestionService(repository, "DEV.PAYMENT.IN");
-    }
+        service = new MessageIngestionServiceImpl(repository, "DEV.PAYMENT.IN");    }
 
     @Test
     void doitEnregistrerUnNouveauMessage() throws Exception {

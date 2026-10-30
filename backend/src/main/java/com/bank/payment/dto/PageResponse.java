@@ -1,5 +1,7 @@
 package com.bank.payment.dto;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public class PageResponse<T> {
@@ -16,6 +18,11 @@ public class PageResponse<T> {
         this.size = size;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
+    }
+
+    public static <T> PageResponse<T> from(Page<T> p) {
+        return new PageResponse<>(p.getContent(), p.getNumber(), p.getSize(),
+                p.getTotalElements(), p.getTotalPages());
     }
 
     public List<T> getContent() { return content; }
