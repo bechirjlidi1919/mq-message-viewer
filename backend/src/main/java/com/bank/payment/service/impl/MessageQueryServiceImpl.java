@@ -42,11 +42,6 @@ public class MessageQueryServiceImpl implements MessageQueryService {
     }
 
     @Override
-    public List<MessageDto> findAll() {
-        return repository.findAllByOrderByReceivedAtDesc();
-    }
-
-    @Override
     public MessageDetailDto findById(Long id) {
         return repository.findById(id)
                 .map(MessageDetailDto::from)

@@ -10,7 +10,5 @@ public interface MessageQueryService {
 
     PageResponse<MessageDto> search(String search, int page, int size);
 
-    List<MessageDto> findAll();
-
     MessageDetailDto findById(Long id);
 }

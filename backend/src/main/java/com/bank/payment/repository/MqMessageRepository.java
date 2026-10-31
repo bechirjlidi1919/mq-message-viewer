@@ -16,5 +16,4 @@ public interface MqMessageRepository extends JpaRepository<MqMessage, Long> {
 
     Page<MessageDto> findByPayloadContaining(String search, Pageable pageable);
 
-    List<MessageDto> findAllByOrderByReceivedAtDesc();
 }

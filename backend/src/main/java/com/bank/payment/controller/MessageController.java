@@ -30,11 +30,6 @@ public class MessageController {
         return queryService.search(search, page, size);
     }
 
-    @GetMapping("/all")
-    public List<MessageDto> getAll() {
-        return queryService.findAll();
-    }
-
     @GetMapping("/{id}")
     public MessageDetailDto get(@PathVariable Long id) {
         return queryService.findById(id);
