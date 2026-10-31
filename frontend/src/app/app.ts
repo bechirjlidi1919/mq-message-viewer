@@ -28,6 +28,13 @@ export class App implements OnInit {
     this.selected.set(null);
     this.load(0);
   }
+  
+  reinitialiser(champ: HTMLInputElement) {
+    champ.value = '';
+    this.search = '';
+    this.selected.set(null);
+    this.load(0);
+  }
 
   load(page: number) {
     let url = `/api/messages?page=${page}&size=20`;

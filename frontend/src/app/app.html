@@ -3,6 +3,7 @@
 <p>
   <input #q placeholder="Rechercher dans le contenu..." (keyup.enter)="rechercher(q.value)">
   <button (click)="rechercher(q.value)">Rechercher</button>
+  <button (click)="reinitialiser(q)" [disabled]="!search">Réinitialiser</button>
 </p>
 
 <table>
